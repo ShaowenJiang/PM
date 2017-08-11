@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 扫描controller（controller层注入） -->
+    <context:component-scan
+            base-package="com.xuehu365.controller">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+    <aop:aspectj-autoproxy/>
+    <!-- 会自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter 两个bean,是spring MVC为@Controllers分发请求所必须的 -->
+    <!-- 指定自己定义的validator -->
+    <!-- 以下 validator ConversionService 在使用 mvc:annotation-driven 会 自动注册 -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+    </bean>
+
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+        <bean class="com.xuehu365.interceptor.AuthInterceptor"/>
+    </mvc:interceptors>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="zh_CN"/>
+    </bean>
+
+    <bean name="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+          p:simpleDateFormat="yyyy-MM-dd HH:mm:ss"
+          p:serializationInclusion="NON_NULL"
+          p:indentOutput="true"/>
+
+    <bean name="xmlMapper" parent="objectMapper" p:createXmlMapper="true" p:indentOutput="false"/>
+
+    <bean name="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="favorParameter" value="true"/>
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+                xml=application/xml
+            </value>
+        </property>
+    </bean>
+
+    <mvc:default-servlet-handler default-servlet-name="default"/>
+
+    <!-- 激活注解配置SpringMVC 的 Controller -->
+    <mvc:annotation-driven
+            content-negotiation-manager="contentNegotiationManager"
+            validator="validator">
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"
+                  p:objectMapper-ref="objectMapper"/>
+            <bean class="org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter"
+                  p:objectMapper-ref="xmlMapper"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 配置springMVC处理上传文件的信息 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="10485760000"/>
+        <property name="maxInMemorySize" value="40960"/>
+    </bean>
+</beans>

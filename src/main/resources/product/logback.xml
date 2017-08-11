@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  日志文件存放路径默认情况下与项目部署目录同级  -->
+<configuration scan="true" scanPeriod="10 seconds" debug="false">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <pattern>|[%-5level][%date{ISO8601}][%logger][%thread][%X{akkaSource}] - %msg %rootException %n</pattern>
+        </encoder>
+    </appender>
+    <!-- DEBUG日志 的时间滚动输出 ，文件最大不能超多1000M，文件后缀名递增，只保存90天内的归档日志-->
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>/data/logs/business/pm/debug.xuehu.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/data/logs/business/pm/debug.xuehu.log.%d{yyyyMMdd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%date{ISO8601}][%logger] - %msg %rootException %n</pattern>
+        </encoder>
+    </appender>
+    <!-- INFO日志 的时间滚动输出，文件最大不能超多100M，文件后缀名递增，只保存90天内的归档日志-->
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>/data/logs/business/pm/info.xuehu.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/data/logs/business/pm/info.xuehu.log.%d{yyyyMMdd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%date{ISO8601}][%logger] - %msg %rootException %n</pattern>
+        </encoder>
+    </appender>
+    <!-- WARN日志 的时间滚动输出，文件最大不能超多100M，文件后缀名递增，只保存90天内的归档日志-->
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>/data/logs/business/pm/warn.xuehu.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/data/logs/business/pm/warn.xuehu.log.%d{yyyyMMdd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%date{ISO8601}][%logger] - %msg %rootException %n</pattern>
+        </encoder>
+    </appender>
+    <!-- ERROR日志 的时间滚动输出，文件最大不能超多100M，文件后缀名递增，只保存90天内的归档日志-->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>/data/logs/business/pm/error.xuehu.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/data/logs/business/pm/error.xuehu.log.%d{yyyyMMdd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%date{ISO8601}][%logger][%thread] - %msg %rootException %n</pattern>
+        </encoder>
+    </appender>
+    <!--标准日志  -->
+    <appender name="standardLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/data/logs/business/pm/standard.xuehu.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/data/logs/business/pm/standard.xuehu.log.%d{yyyyMMdd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%date{ISO8601}] - %msg %n</pattern>
+        </encoder>
+    </appender>
+<!--长耗时日志-->
+    <appender name="longtimeLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/data/logs/business/pm/longtime.xuehu.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/data/logs/business/pm/longtime.xuehu.log.%d{yyyyMMdd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%date{ISO8601}] - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="jdbc.connection" level="off"/>
+    <logger name="jdbc.resultset" level="off"/>
+    <logger name="jdbc.audit" level="off"/>
+    <logger name="jdbc.sqlonly" level="off"/>
+    <logger name="jdbc.resultsettable" level="off"/>
+    <logger name="jdbc.sqltiming" level="off"/>
+
+
+    <logger name="standardLog" additivity="false">
+        <appender-ref ref="standardLogAppender"/>
+    </logger>
+
+    <logger name="longtimeLog" additivity="false">
+        <appender-ref ref="longtimeLogAppender"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="WARN"/>
+        <appender-ref ref="ERROR"/>
+    </root>
+
+
+</configuration>

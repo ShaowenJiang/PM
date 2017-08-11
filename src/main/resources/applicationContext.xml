@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/jdbc
+    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+    http://www.springframework.org/schema/cache
+    http://www.springframework.org/schema/cache/spring-cache.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 自动扫描xuehu365包 ,将带有注解的类 纳入spring容器管理 -->
+    <context:component-scan base-package="com.xuehu365">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!-- 引入配置文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- dataSource 配置 -->
+    <bean id="dataSource_BOOK28" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${boke28.jdbc.url}"/>
+        <property name="username" value="${boke28.jdbc.username}"/>
+        <property name="password" value="${boke28.jdbc.password}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${ds.initialSize}"/>
+        <property name="minIdle" value="${ds.minIdle}"/>
+        <property name="maxActive" value="${ds.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${ds.maxWait}"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${ds.timeBetweenEvictionRunsMillis}"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${ds.minEvictableIdleTimeMillis}"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+    </bean>
+    <bean id="dataSource_ROOM" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${room.jdbc.url}"/>
+        <property name="username" value="${room.jdbc.username}"/>
+        <property name="password" value="${room.jdbc.password}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${ds.initialSize}"/>
+        <property name="minIdle" value="${ds.minIdle}"/>
+        <property name="maxActive" value="${ds.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${ds.maxWait}"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${ds.timeBetweenEvictionRunsMillis}"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${ds.minEvictableIdleTimeMillis}"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+    </bean>
+    <bean id="dataSource_SERVER" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${server.jdbc.url}"/>
+        <property name="username" value="${server.jdbc.username}"/>
+        <property name="password" value="${server.jdbc.password}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${ds.initialSize}"/>
+        <property name="minIdle" value="${ds.minIdle}"/>
+        <property name="maxActive" value="${ds.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${ds.maxWait}"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${ds.timeBetweenEvictionRunsMillis}"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${ds.minEvictableIdleTimeMillis}"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+    </bean>
+    <bean id="dataSource_ORDER" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${order.jdbc.url}"/>
+        <property name="username" value="${order.jdbc.username}"/>
+        <property name="password" value="${order.jdbc.password}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${ds.initialSize}"/>
+        <property name="minIdle" value="${ds.minIdle}"/>
+        <property name="maxActive" value="${ds.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${ds.maxWait}"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${ds.timeBetweenEvictionRunsMillis}"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${ds.minEvictableIdleTimeMillis}"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+    </bean>
+    <bean id="dataSource_ADMIN" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${admin.jdbc.url}"/>
+        <property name="username" value="${admin.jdbc.username}"/>
+        <property name="password" value="${admin.jdbc.password}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${ds.initialSize}"/>
+        <property name="minIdle" value="${ds.minIdle}"/>
+        <property name="maxActive" value="${ds.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${ds.maxWait}"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${ds.timeBetweenEvictionRunsMillis}"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${ds.minEvictableIdleTimeMillis}"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+    </bean>
+
+    <!-- DAO类中需要用到哪个sessionFactory, 请通过 @Autowired("名称") 进行限定 -->
+    <bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="mapperLocations" value="classpath*:com/xuehu365/domain/mapper/*Mapper.xml"/>
+        <property name="typeAliasesPackage" value="com.xuehu365.domain"/>
+        <property name="dataSource" ref="dataSource_BOOK28"/>
+    </bean>
+
+    <bean name="sqlSessionFactoryAdmin" class="org.mybatis.spring.SqlSessionFactoryBean" parent="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource_ADMIN"/>
+    </bean>
+    <bean name="sqlSessionFactoryServer" class="org.mybatis.spring.SqlSessionFactoryBean" parent="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource_SERVER"/>
+    </bean>
+
+    <bean name="sqlSessionFactoryBoke28" class="org.mybatis.spring.SqlSessionFactoryBean" parent="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource_BOOK28"/>
+    </bean>
+
+    <bean name="sqlSessionFactoryRooms" class="org.mybatis.spring.SqlSessionFactoryBean" parent="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource_ROOM"/>
+    </bean>
+
+    <bean name="sqlSessionFactoryOrder" class="org.mybatis.spring.SqlSessionFactoryBean" parent="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource_ORDER"/>
+    </bean>
+
+    <!-- spring与mybatis整合配置，扫描所有dao -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" p:basePackage="com.xuehu365.dao"
+          p:sqlSessionFactoryBeanName="sqlSessionFactory"/>
+
+    <bean class="com.xuehu365.util.SpringContextUtil" lazy-init="false"/>
+
+    <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource_BOOK28"/>
+
+    <!-- 配置使Spring采用CGLIB代理 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 启用对事务注解的支持 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <!-- Cache配置 -->
+    <!--<cache:annotation-driven cache-manager="cacheManager"/>-->
+
+    <!--<bean id="ehCacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"-->
+          <!--p:configLocation="classpath:ehcache.xml"/>-->
+    <!--<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"-->
+          <!--p:cacheManager-ref="ehCacheManagerFactory"/>-->
+
+    <!--
+      log4jdbc可以将数据源执行的sql将占位符?替换成字符,并以日志打印出来.
+      log4j配置: log4j.logger.jdbc.sqltiming=INFO 日志信息如果全部为off,
+      log4jdbc将不会生效,因此对性能没有任何影响
+   -->
+    <bean name="log4jdbcInterceptor" class="net.sf.log4jdbc.DataSourceSpyInterceptor"/>
+
+    <bean name="dataSourceLog4jdbcAutoProxyCreator"
+          class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="interceptorNames" value="log4jdbcInterceptor"/>
+        <property name="beanNames"
+                  value="dataSource_BOOK28,dataSource_ROOM,dataSource_ORDER,dataSource_SERVER"/>
+    </bean>
+</beans>
